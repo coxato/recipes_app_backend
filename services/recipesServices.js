@@ -21,7 +21,7 @@ async function createRecipe(body) {
 
 async function getRecipe({ id }) {
     const Recipes = getRecipesModel();
-    const recipe = await Users.findOne({ where: { id } });
+    const recipe = await Recipes.findOne({ where: { id } });
 
     return {
         recipe
@@ -29,9 +29,9 @@ async function getRecipe({ id }) {
 }
 
 
-async function getRecipesByIngredients({  }) {
+async function getRecipesByIngredients({ ingredients }) {
     const Recipes = getRecipesModel();
-    const recipe = await Users.findOne({ where: { id } });
+    const recipe = await Recipes.findAll({});
 
     return {
         recipe
@@ -43,5 +43,6 @@ async function getRecipesByIngredients({  }) {
 
 module.exports = {
     createRecipe,
-    loginUser
+    getRecipe,
+    getRecipesByIngredients
 }

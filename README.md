@@ -50,3 +50,13 @@ All routes starts with `<<host>>/api`
 - params
 `recipe id`
 - returns recipe
+
+## `/api/recipes/SearchRecipesByIngredients` (POST)
+
+- params
+```
+{ 
+    ingredients: Array<string>
+}
+```
+- recipes list based on ingredients

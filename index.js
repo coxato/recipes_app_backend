@@ -4,7 +4,7 @@ const { PORT } = require('./config');
 const useRoutes = require("./routes/indexRoutes");
 const errorMiddleware = require("./middlewares/error");
 // db
-const initDB = require("./db");
+const { initDB } = require("./db");
 const initModels = require("./models/initModels"); 
 
 const app = express();

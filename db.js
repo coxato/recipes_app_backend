@@ -1,6 +1,12 @@
 const { Sequelize } = require("sequelize");
 const { DB_USER, DB_NAME, DB_PASS } = require("./config");
 
+let dbInstance;
+
+function getDBInstance() {
+    return dbInstance;
+}
+
 function initDB() {
     return new Promise((resolve, reject) => {
         const sequelizeInstance = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
@@ -13,7 +19,10 @@ function initDB() {
         });
     
         sequelizeInstance.authenticate()
-            .then(()=> resolve(sequelizeInstance))
+            .then(()=> {
+                dbInstance = sequelizeInstance;
+                resolve(sequelizeInstance);
+            })
             .catch(() => {
                 console.log('DB ERROR: ', error)
                 reject(false);
@@ -22,4 +31,7 @@ function initDB() {
 
 }
 
-module.exports = initDB;
+module.exports = {
+    initDB,
+    getDBInstance
+};

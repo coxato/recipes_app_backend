@@ -6,15 +6,12 @@ async function initRecipes(sequelizeInstance) {
     Recipes.init({
         id: {
             type: DataTypes.STRING,
-            primaryKey: true
+            primaryKey: true,
         },
         name: {
             type: DataTypes.STRING,
         },
         description: {
-            type: DataTypes.STRING
-        },
-        ingredients: {
             type: DataTypes.STRING
         },
         image: {

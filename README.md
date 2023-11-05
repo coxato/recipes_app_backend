@@ -2,8 +2,15 @@
 
 nodejs app
 
+### Required software
+You need following software installed on your pc
+- Node.js (version 16 or higher)
+- MySql server
+- Xampp (optional) for importing .sql file
+
 ## Before run
-install the database (recipes_app.sql) and run this command on folder root
+install the database `recipes_app.sql` and run this command on folder root
+
 `npm install`
 
 ### How to run

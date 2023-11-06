@@ -59,8 +59,16 @@ All routes starts with `<<host>>/api`
 - returns recipe
 
 ## `/api/recipes/SearchRecipesByIngredients` (POST)
+Available ingredients in .sql file:
+- cheese
+- tomato
+- rice
+- milk
+- pasta
+- flour
 
-- params
+
+params
 ```
 { 
     ingredients: Array<string>

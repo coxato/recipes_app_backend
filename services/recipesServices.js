@@ -35,28 +35,44 @@ async function getRecipe({ id }) {
 
 async function getRecipesByIngredients({ ingredients }) {
     const dbInstance = getDBInstance();
+    const Ingredients = getIngredientModel();
+    const IngredientsRecipes = getRecipesIngredientsModel();
 
-    function normalize(arr) {
+    function buildJoins(arr) {
         let r = "";
-        for (const s of arr) {
-            r += `'${s}',`
+        for (let i = 0; i < arr.length; i++) {
+            r += `INNER JOIN recipe_ingredients AS ri${i} ON r.id = ri${i}.id_recipe
+            INNER JOIN ingredients AS i${i} ON ri${i}.id_ingredient = i${i}.id AND i${i}.name = '${arr[i]}'
+            `
         }
-        r = r.substring(0, r.length -1);
         return r;
     }
-    const normalizedValues = normalize(ingredients);
+    const joins = buildJoins(ingredients);
 
+    // match all the array items 
     const results = await dbInstance.query(
-        `SELECT r.name FROM recipes as r
-        INNER JOIN recipe_ingredients ON r.id = recipe_ingredients.id_recipe
-        INNER JOIN ingredients ON recipe_ingredients.id_ingredient = ingredients.id
-        WHERE (SELECT (ingredients.name)  FROM ingredients
-            INNER JOIN recipe_ingredients ON ingredients.id = recipe_ingredients.id_ingredient
-            INNER JOIN recipes ON recipe_ingredients.id_recipe = recipes.id 
-            WHERE recipes.id = r.id GROUP BY ingredients.name) IN (${normalizedValues})
+        `
+        SELECT r.*
+        FROM recipes AS r
+        ${joins}
         `,
         { type: Sequelize.QueryTypes.SELECT }
     );
+
+    // add array of ingredients for each recipe found
+    if(results.length){
+        for (const recipe of results) {
+            const ingredientsForThisRecipe = await dbInstance.query(`
+                SELECT ingredients.name, ingredients.id  FROM ingredients 
+                INNER JOIN recipe_ingredients ON ingredients.id = recipe_ingredients.id_ingredient 
+                WHERE recipe_ingredients.id_recipe = ${recipe.id}
+            `,
+            { type: Sequelize.QueryTypes.SELECT }
+            );
+            // declare array
+            recipe.ingredients = ingredientsForThisRecipe;
+        }
+    }
 
     return {
         results
